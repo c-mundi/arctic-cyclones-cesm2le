@@ -1460,106 +1460,106 @@ si_lat = dsi['TLAT'].values
 
 
 #%% make indiv. storm impact comparison subplots (not shown in paper)
-def align_zeros(axes):
+# def align_zeros(axes):
 
-    ylims_current = {}   #  Current ylims
-    ylims_mod     = {}   #  Modified ylims
-    deltas        = {}   #  ymax - ymin for ylims_current
-    ratios        = {}   #  ratio of the zero point within deltas
+#     ylims_current = {}   #  Current ylims
+#     ylims_mod     = {}   #  Modified ylims
+#     deltas        = {}   #  ymax - ymin for ylims_current
+#     ratios        = {}   #  ratio of the zero point within deltas
 
-    for ax in axes:
-        ylims_current[ax] = list(ax.get_ylim())
-                        # Need to convert a tuple to a list to manipulate elements.
-        deltas[ax]        = ylims_current[ax][1] - ylims_current[ax][0]
-        ratios[ax]        = -ylims_current[ax][0]/deltas[ax]
+#     for ax in axes:
+#         ylims_current[ax] = list(ax.get_ylim())
+#                         # Need to convert a tuple to a list to manipulate elements.
+#         deltas[ax]        = ylims_current[ax][1] - ylims_current[ax][0]
+#         ratios[ax]        = -ylims_current[ax][0]/deltas[ax]
     
-    for ax in axes:      # Loop through all axes to ensure each ax fits in others.
-        ylims_mod[ax]     = [np.nan,np.nan]   # Construct a blank list
-        ylims_mod[ax][1]  = max(deltas[ax] * (1-np.array(list(ratios.values()))))
-                        # Choose the max value among (delta for ax)*(1-ratios),
-                        # and apply it to ymax for ax
-        ylims_mod[ax][0]  = min(-deltas[ax] * np.array(list(ratios.values())))
-                        # Do the same for ymin
-        ax.set_ylim(tuple(ylims_mod[ax]))
+#     for ax in axes:      # Loop through all axes to ensure each ax fits in others.
+#         ylims_mod[ax]     = [np.nan,np.nan]   # Construct a blank list
+#         ylims_mod[ax][1]  = max(deltas[ax] * (1-np.array(list(ratios.values()))))
+#                         # Choose the max value among (delta for ax)*(1-ratios),
+#                         # and apply it to ymax for ax
+#         ylims_mod[ax][0]  = min(-deltas[ax] * np.array(list(ratios.values())))
+#                         # Do the same for ymin
+#         ax.set_ylim(tuple(ylims_mod[ax]))
 
 
-#### miz area
-f = root_path+'processed-data/figures/miz_data_all.nc'
-miz_data = xr.open_dataarray(f) 
-months = [5,6,7,8,9]
-decades = [np.arange(1982,1992), np.arange(1990,2000),
-           np.arange(2000,2010), np.arange(2010,2020),
-           np.arange(2020,2030), np.arange(2030,2040),
-           np.arange(2040,2050), np.arange(2050,2060),
-           np.arange(2060,2070), np.arange(2070,2080),
-           np.arange(2080,2090), np.arange(2090,2100)
-            ]
+# #### miz area
+# f = root_path+'processed-data/figures/miz_data_all.nc'
+# miz_data = xr.open_dataarray(f) 
+# months = [5,6,7,8,9]
+# decades = [np.arange(1982,1992), np.arange(1990,2000),
+#            np.arange(2000,2010), np.arange(2010,2020),
+#            np.arange(2020,2030), np.arange(2030,2040),
+#            np.arange(2040,2050), np.arange(2050,2060),
+#            np.arange(2060,2070), np.arange(2070,2080),
+#            np.arange(2080,2090), np.arange(2090,2100)
+#             ]
 
-miz_avg = miz_data.mean(dim = ('years','ensemble_members','days')).sel(lat_bands='total')
+# miz_avg = miz_data.mean(dim = ('years','ensemble_members','days')).sel(lat_bands='total')
 
-miz_decs = [(miz_avg.sel(decades=dec)) for dec in miz_data.decades]
+# miz_decs = [(miz_avg.sel(decades=dec)) for dec in miz_data.decades]
 
-#### impact calculations
-annual_sum = []
-month_sum = {mm:[] for mm in months}
+# #### impact calculations
+# annual_sum = []
+# month_sum = {mm:[] for mm in months}
 
-for yx, years in enumerate(decades):
-    year_maps = []
-    for mm, month in enumerate(months):
-        savepath5 = root_path+'processed-data/spatial/'
-        savename5 = 'plot_difference2_'+str(month)+'_'+str(years[0])+'_'+str(years[-1])+'.npy'
-        grd = np.load(savepath5+savename5)
-        if np.all(np.isnan(grd)):
-            grd = np.zeros(np.shape(si_lon))
+# for yx, years in enumerate(decades):
+#     year_maps = []
+#     for mm, month in enumerate(months):
+#         savepath5 = root_path+'processed-data/spatial/'
+#         savename5 = 'plot_difference2_'+str(month)+'_'+str(years[0])+'_'+str(years[-1])+'.npy'
+#         grd = np.load(savepath5+savename5)
+#         if np.all(np.isnan(grd)):
+#             grd = np.zeros(np.shape(si_lon))
         
-        year_maps.append( grd )
-        month_sum[month].append( np.nansum(grd) )
+#         year_maps.append( grd )
+#         month_sum[month].append( np.nansum(grd) )
         
-    plot_change = np.nansum(year_maps,axis=0)
-    plot_change = np.where(plot_change==0, np.nan, plot_change)  
-    annual_sum.append( np.nansum(plot_change) )
+#     plot_change = np.nansum(year_maps,axis=0)
+#     plot_change = np.where(plot_change==0, np.nan, plot_change)  
+#     annual_sum.append( np.nansum(plot_change) )
 
-#### relative changes: plot
-mcolors = ['#E68310', '#E73F74', '#7F3C8D', '#008695', '#4b4b8f']
-scale=1e6
-fig, axes = plt.subplots(6,1, figsize=(8,12), sharex=True)
+# #### relative changes: plot
+# mcolors = ['#E68310', '#E73F74', '#7F3C8D', '#008695', '#4b4b8f']
+# scale=1e6
+# fig, axes = plt.subplots(6,1, figsize=(8,12), sharex=True)
 
-rel_list=[]
-for mi, mm in enumerate(months):
-    # old
-    ax1 = axes[mi].twinx()
-    old = ax1.plot(np.array(month_sum[mm])/scale, color=mcolors[mi], lw=1.75, ls=':')
+# rel_list=[]
+# for mi, mm in enumerate(months):
+#     # old
+#     ax1 = axes[mi].twinx()
+#     old = ax1.plot(np.array(month_sum[mm])/scale, color=mcolors[mi], lw=1.75, ls=':')
     
-    # scaled
-    rel_changes = np.array(month_sum[mm])/np.array(miz_decs)[:,mi]
-    rel_list.append(rel_changes)
-    axes[mi].plot(np.array(rel_changes)*100, color=mcolors[mi], lw=2)
+#     # scaled
+#     rel_changes = np.array(month_sum[mm])/np.array(miz_decs)[:,mi]
+#     rel_list.append(rel_changes)
+#     axes[mi].plot(np.array(rel_changes)*100, color=mcolors[mi], lw=2)
     
-    # organize plot
-    axes[mi].set_title(calendar.month_name[mm])
-    axes[mi].set_xticks(np.arange(len(decades)))
-    axes[mi].axhline(0, lw=0.75, color='gray', ls=':')
-    if mi==1 or mi==4: ax1.set_ylabel('Change in MIZ Ice Area'+r'($\times 10^6$ km$^2$)')
-    align_zeros([ax1, axes[mi]])
+#     # organize plot
+#     axes[mi].set_title(calendar.month_name[mm])
+#     axes[mi].set_xticks(np.arange(len(decades)))
+#     axes[mi].axhline(0, lw=0.75, color='gray', ls=':')
+#     if mi==1 or mi==4: ax1.set_ylabel('Change in MIZ Ice Area'+r'($\times 10^6$ km$^2$)')
+#     align_zeros([ax1, axes[mi]])
 
-## total
-axes[mi+1].plot(np.nanmean(rel_list,axis=0)*100, color='k', lw=2)
-axes[mi+1].axhline(np.nanmin(np.nanmean(rel_list,axis=0)*100), lw=0.55, color='gray', ls=':')
-# axes[mi+1].axhline(0, lw=0.75, color='gray', ls=':')
-axes[mi+1].set_title('Total')
-ax2 = axes[mi+1].twinx()
-ax2.plot(np.array(annual_sum)/scale, color='k', lw=2, ls=':')
-align_zeros([ax2, axes[mi+1]])
+# ## total
+# axes[mi+1].plot(np.nanmean(rel_list,axis=0)*100, color='k', lw=2)
+# axes[mi+1].axhline(np.nanmin(np.nanmean(rel_list,axis=0)*100), lw=0.55, color='gray', ls=':')
+# # axes[mi+1].axhline(0, lw=0.75, color='gray', ls=':')
+# axes[mi+1].set_title('Total')
+# ax2 = axes[mi+1].twinx()
+# ax2.plot(np.array(annual_sum)/scale, color='k', lw=2, ls=':')
+# align_zeros([ax2, axes[mi+1]])
  
-for ax in [axes[-2], axes[1]]: ax.set_ylabel('Total Relative Change per MIZ Area (%)')
-axes[-1].set_xticklabels(['\''+str(yy[0])[2]+'0s' for yy in decades])
+# for ax in [axes[-2], axes[1]]: ax.set_ylabel('Total Relative Change per MIZ Area (%)')
+# axes[-1].set_xticklabels(['\''+str(yy[0])[2]+'0s' for yy in decades])
 
 
 
-axes[-1].plot([],[], lw=2, ls='-', color='gray', label ='Normalized by MIZ Area\n          (left axis)')
-axes[-1].plot([],[], lw=2, ls=':', color='gray', label ='Change in MIZ Ice Area (as in Fig. 4)\n             (right axis)')
-axes[-1].legend(loc='lower left', bbox_to_anchor=(0.1, -0.66),
-                ncol=2, handlelength=2.5, handletextpad=0.5)
+# axes[-1].plot([],[], lw=2, ls='-', color='gray', label ='Normalized by MIZ Area\n          (left axis)')
+# axes[-1].plot([],[], lw=2, ls=':', color='gray', label ='Change in MIZ Ice Area (as in Fig. 4)\n             (right axis)')
+# axes[-1].legend(loc='lower left', bbox_to_anchor=(0.1, -0.66),
+#                 ncol=2, handlelength=2.5, handletextpad=0.5)
 
 #%% fig s2: individual month impacts 
 def era_tseries():
