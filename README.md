@@ -1,7 +1,6 @@
 # arctic-cyclones-cesm2le
-Software files for Mundi et al., 2025 (Geophysical Research Letters)
-python scripts used for data analysis and plotting
-
+Software files for Mundi et al., 2025: python scripts used for data analysis and plotting  
+Have Impacts of Intense Arctic Cyclones on Summer Sea Ice Reached a Maximum? (Geophysical Research Letters)  
 Contact: Claire Mundi, mundi@wisc.edu
 
 CONTAINS:
@@ -14,7 +13,7 @@ CONTAINS:
 
 ./era5_data/
 + output from ERA5 census of storms
-* ./era5_data/areas/ = storm area fractions (miz vs pack ice)
+* ./era5_data/areas = storm area fractions (miz vs pack ice)
 * ./era5_data/cyclone_tracker_out_may = areas, census for may storms
 * ./era5_data/decades = areas, census for 1990s and 2000s
 * ./era5_data/original_census = storm lists for 1980s, 2010s
